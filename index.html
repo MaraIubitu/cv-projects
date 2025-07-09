@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+</head>
+<body>
+  <nav class="navbar">
+  <div class="nav-content">
+    <a class="nav-logo">Mara Iubitu</a>
+    <div class="nav-links">
+      <a href="index.html">Projects</a>
+      <a href="certifications.html">Certifications</a>
+    </div>
+  </div>
+  </nav>
+
+  <header>
+    <h1>Hi, I'm Mara Iubitu 💫</h1>
+    <p>Check out my projects below!</p>
+  </header>
+
+  <main class="projects">
+    <section class="project left" data-aos="fade-right" data-aos-duration="1000" data-aos-easing="ease-in-out">
+        <img src="todo.jpg" alt="Project 1 Preview"/>
+        <div class="text">
+            <h2>Personal To-Do Webb App</h2>
+            <p>A sleek, responsive to-do list app with drag-and-drop, theme toggle, and localStorage persistence built using vanilla JavaScript, HTML, and CSS..</p>
+            <a href="todo.html">View Project →</a>
+        </div>
+    </section>
+
+
+    <section class="project right" data-aos="fade-left">
+      <img src="images/project2-img1.jpg" alt="Project 2 Preview"/>
+      <div class="text">
+        <h2>Object Tracker</h2>
+        <p>A playful Arduino-based system that uses ultrasonic sensing and servo motors to track and follow nearby objects in real time.</p>
+        <a href="tracker.html">View Project →</a>
+      </div>
+    </section>
+
+    <!-- Add more sections here -->
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+</body>
+</html>
