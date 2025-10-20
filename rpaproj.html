@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hotel Hunter | Mara Iubitu Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Animated background particles */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.15;
+    }
+
+    .particle {
+      position: absolute;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0) scale(1);
+      }
+      33% {
+        transform: translateY(-100px) translateX(100px) scale(1.2);
+      }
+      66% {
+        transform: translateY(-50px) translateX(-80px) scale(0.8);
+      }
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(10, 10, 10, 0.95);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+      font-size: 0.95rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      text-align: center;
+      padding: 10rem 2rem 4rem;
+      margin-top: 60px;
+      overflow: hidden;
+    }
+
+    header h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, #667eea 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -2px;
+    }
+
+    header p {
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    header a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    header a:hover {
+      color: #fff;
+    }
+
+    /* Video wrapper */
+    .video-wrapper {
+      position: relative;
+      max-width: 900px;
+      margin: 2rem auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      background: #000;
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 20px;
+    }
+
+    .video-play-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 20px;
+    }
+
+    .video-wrapper.playing .video-play-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .video-play-overlay:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .video-play-overlay svg {
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+    }
+
+    .video-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      border-radius: 20px;
+    }
+
+    .video-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      width: 0%;
+      border-radius: 20px;
+      transition: width 0.1s linear;
+    }
+
+    /* Video controls */
+    .video-controls {
+      display: flex;
+      gap: 0.8rem;
+      max-width: 900px;
+      margin: 1rem auto;
+      padding: 0 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .video-controls button {
+      padding: 0.6rem 1.2rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .video-controls button:hover {
+      background: rgba(102, 126, 234, 0.3);
+      border-color: rgba(102, 126, 234, 0.5);
+      color: #fff;
+    }
+
+    /* Project boxes */
+    .project-box {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-headline {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, #667eea 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .project-box h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+
+    .project-box p,
+    .project-box ul {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 1rem;
+    }
+
+    .project-box ul {
+      padding-left: 1.5rem;
+    }
+
+    .project-box ul li {
+      margin-bottom: 0.8rem;
+    }
+
+    .project-meta {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.8;
+    }
+
+    .project-meta strong {
+      color: #fff;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: #888;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 4rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-content {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        gap: 1.5rem;
+      }
+
+      header h1 {
+        font-size: 2.2rem;
+      }
+
+      .project-headline {
+        font-size: 1.6rem;
+      }
+
+      .project-box {
+        padding: 1.5rem;
+      }
+
+      .video-wrapper {
+        max-width: 90%;
+      }
+
+      .video-controls {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation" id="particles"></div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-content">
+      <div class="nav-logo">Mara Iubitu</div>
+      <div class="nav-links">
+        <a href="index.html">Projects</a>
+        <a href="certifications.html">Certifications</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Hotel Hunter</h1>
+    <p>Automated Hotel Search & Data Extraction Using UiPath</p>
+    <a href="index.html">← Back to Portfolio</a>
+  </header>
+
+  <section class="video-wrapper" id="videoWrapper" data-aos="fade-up">
+    <video id="mainVideo" muted playsinline>
+      <source src="RPAdemo.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-play-overlay" id="playOverlay">
+      <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="48" stroke="white" stroke-width="4" fill="rgba(0,0,0,0.5)" />
+        <polygon points="40,30 70,50 40,70" fill="white" />
+      </svg>
+    </div>
+    <div class="video-progress">
+      <div class="video-progress-fill" id="progressFill"></div>
+    </div>
+  </section>
+
+  <div class="video-controls">
+    <button id="backwardBtn">⏪ -5s</button>
+    <button id="speedBtn">1x</button>
+    <button id="forwardBtn">+5s ⏩</button>
+    <button id="fullscreenBtn">⛶ Fullscreen</button>
+  </div>
+
+  <section class="project-box" data-aos="fade-up">
+    <h1 class="project-headline">UiPath Hotel Hunter</h1>
+    <div class="project-meta">
+      <p><strong>Personal Project</strong> | <strong>Role:</strong> RPA Developer</p>
+      <p><strong>Technologies:</strong> UiPath Studio, Excel, Web Scraping, Data Processing</p>
+    </div>
+  </section>
+
+  <section class="project-box" data-aos="fade-up">
+    <p>The <em>Hotel Hunter</em> is an RPA automation designed to search hotel booking platforms, extract relevant hotel information (name, price, rating, location), and compile the results into structured Excel sheets. It streamlines repetitive search tasks and ensures accurate data collection for travel planning or analysis.</p>
+  </section>
+
+  <section class="project-box" data-aos="fade-up">
+    <h2>My Contributions</h2>
+    <ul>
+      <li><strong>Workflow Design:</strong> Built UiPath sequences to navigate websites, handle search inputs, and extract hotel data.</li>
+      <li><strong>Data Extraction:</strong> Implemented reliable scraping logic using selectors and dynamic data handling.</li>
+      <li><strong>Error Handling:</strong> Integrated Try-Catch blocks and logging to handle navigation errors and unexpected popups.</li>
+      <li><strong>Data Management:</strong> Automated Excel reporting, ensuring structured storage of hotel details for analysis.</li>
+    </ul>
+  </section>
+
+  <section class="project-box" data-aos="fade-up">
+    <h2>Skills Applied</h2>
+    <ul>
+      <li>Robotic Process Automation with UiPath Studio</li>
+      <li>Web scraping and data extraction</li>
+      <li>Excel automation and structured reporting</li>
+      <li>Error handling and workflow robustness</li>
+      <li>Process optimization for repetitive tasks</li>
+      <li>Debugging and testing automated workflows</li>
+    </ul>
+  </section>
+
+  <footer>&copy; 2025 Mara Iubitu</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({ once: true, offset: 100 });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Generate animated particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 15; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      const size = Math.random() * 100 + 50;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 10 + 's';
+      particle.style.animationDuration = (Math.random() * 20 + 15) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Video controls
+    const video = document.getElementById('mainVideo');
+    const wrapper = document.getElementById('videoWrapper');
+    const overlay = document.getElementById('playOverlay');
+    const progressFill = document.getElementById('progressFill');
+    const speedBtn = document.getElementById('speedBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const backwardBtn = document.getElementById('backwardBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    // Play/Pause on click
+    overlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (video.paused) {
+        video.play();
+        wrapper.classList.add('playing');
+      } else {
+        video.pause();
+        wrapper.classList.remove('playing');
+      }
+    });
+
+    wrapper.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+        wrapper.classList.add('playing');
+      } else {
+        video.pause();
+        wrapper.classList.remove('playing');
+      }
+    });
+
+    // Update progress bar
+    video.addEventListener('timeupdate', () => {
+      const percent = (video.currentTime / video.duration) * 100;
+      progressFill.style.width = percent + '%';
+    });
+
+    // Progress bar click
+    const progressBar = document.querySelector('.video-progress');
+    progressBar.addEventListener('click', (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      video.currentTime = percent * video.duration;
+    });
+
+    // Speed control
+    const speeds = [1, 1.5, 2];
+    let speedIndex = 0;
+    speedBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speedIndex = (speedIndex + 1) % speeds.length;
+      video.playbackRate = speeds[speedIndex];
+      speedBtn.textContent = speeds[speedIndex] + 'x';
+    });
+
+    // Forward/Backward buttons
+    forwardBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      video.currentTime = Math.min(video.duration, video.currentTime + 5);
+    });
+
+    backwardBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      video.currentTime = Math.max(0, video.currentTime - 5);
+    });
+
+    // Fullscreen
+    fullscreenBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (wrapper.requestFullscreen) {
+        wrapper.requestFullscreen();
+      } else if (wrapper.webkitRequestFullscreen) {
+        wrapper.webkitRequestFullscreen();
+      } else if (wrapper.msRequestFullscreen) {
+        wrapper.msRequestFullscreen();
+      }
+    });
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ') {
+        e.preventDefault();
+        if (video.paused) {
+          video.play();
+          wrapper.classList.add('playing');
+        } else {
+          video.pause();
+          wrapper.classList.remove('playing');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

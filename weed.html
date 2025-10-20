@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agricultural Weed Detection Robot | Mara Iubitu Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    .bg-animation {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      z-index:0;
+      pointer-events:none;
+      opacity:0.15;
+    }
+    .particle {
+      position:absolute;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius:50%;
+      animation: float 20s infinite ease-in-out;
+    }
+    @keyframes float {
+      0%,100% {transform:translateY(0) translateX(0) scale(1);}
+      33% {transform:translateY(-100px) translateX(100px) scale(1.2);}
+      66% {transform:translateY(-50px) translateX(-80px) scale(0.8);}
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed; top:0; left:0; right:0; z-index:1000;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled { background: rgba(10,10,10,0.95); box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+    .nav-content {
+      max-width:1400px; margin:0 auto; padding:1.2rem 3rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .nav-logo {
+      font-size:1.5rem; font-weight:700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip:text; letter-spacing:-0.5px;
+    }
+    .nav-links { display:flex; gap:2.5rem; }
+    .nav-links a {
+      text-decoration:none;
+      color:rgba(255,255,255,0.8);
+      font-weight:500;
+      font-size:0.95rem;
+      position:relative;
+      transition: color 0.3s ease;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-5px; left:0; width:0; height:2px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color:#fff; }
+    .nav-links a:hover::after { width:100%; }
+
+    /* Header */
+    header {
+      position:relative; text-align:center; padding:10rem 2rem 4rem; margin-top:60px; overflow:hidden;
+    }
+    header h1 {
+      font-size: clamp(2.5rem,6vw,4rem);
+      font-weight:800; margin-bottom:1rem;
+      background: linear-gradient(135deg, #fff 0%, #667eea 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip:text; letter-spacing:-2px;
+    }
+    header p { font-size: clamp(1.1rem,2vw,1.3rem); color:rgba(255,255,255,0.7); font-weight:400; margin-bottom:1rem; }
+    header a { color:rgba(255,255,255,0.8); text-decoration:none; font-weight:500; transition: color 0.3s ease;}
+    header a:hover { color:#fff; }
+
+    /* Video wrapper */
+    .video2-wrapper {
+      position: relative; max-width: 400px; margin:2rem auto; border-radius:20px; overflow:hidden;
+      box-shadow:0 20px 50px rgba(0,0,0,0.3); background:#111;
+    }
+    .video2-wrapper video { width:100%; display:block; cursor:pointer; border-radius:20px; object-fit:cover; background:black; }
+    .video2-play-overlay {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      z-index:2; cursor:pointer; display:none;
+    }
+    .video2-wrapper.paused .video2-play-overlay { display:block; }
+    .video2-play-overlay svg:hover polygon { fill:#ff8ba7; }
+    .video2-progress { position:absolute; bottom:0; left:0; width:100%; height:6px; background:rgba(255,255,255,0.2); }
+    .video2-progress-fill { height:100%; background:linear-gradient(to right,#ff758c,#ff7eb3); width:0%; transition:width 0.1s ease; }
+    .video2-controls {
+      max-width:400px; margin:1rem auto 3rem; display:flex; justify-content:center; gap:0.7rem;
+    }
+    .video2-controls button {
+      background:#222; color:#fff; border:none; padding:0.5rem 1rem; border-radius:12px; font-size:1rem; cursor:pointer; transition: background 0.2s ease; min-width:60px;
+    }
+    .video2-controls button:hover { background:#ff7eb3; }
+
+    /* Project boxes */
+    .project2-box {
+      max-width:900px; margin:2rem auto; padding:2rem;
+      background:rgba(255,255,255,0.03);
+      border-radius:20px; border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px); color:#fff;
+      box-shadow:0 20px 50px rgba(0,0,0,0.3);
+    }
+    .project2-headline {
+      font-size:2rem; font-weight:700;
+      background: linear-gradient(135deg, #fff 0%, #667eea 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:1rem;
+    }
+    .project2-box h2 { font-size:1.5rem; font-weight:700; margin-bottom:0.8rem; }
+    .project2-box p, .project2-box ul { font-size:1rem; line-height:1.6; color:rgba(255,255,255,0.8); margin-bottom:1rem; }
+    .project2-box ul li { margin-bottom:0.5rem; padding-left:0.5rem; }
+
+    @media (max-width:768px){
+      .video2-wrapper, .video2-controls { max-width:90%; }
+      header h1 { font-size:2.2rem; }
+      .project2-headline { font-size:1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation" id="particles"></div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-content">
+      <div class="nav-logo">Mara Iubitu</div>
+      <div class="nav-links">
+        <a href="index.html">Projects</a>
+        <a href="certifications.html">Certifications</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Agricultural Weed Detection Robot</h1>
+    <p>Smart Autonomous Weeding Prototype</p>
+    <a href="index.html">← Back to Portfolio</a>
+  </header>
+
+  <section class="project2-box" data-aos="fade-up">
+    <div class="video2-wrapper paused">
+      <video id="video2-previewVideo" muted loop playsinline>
+        <source src="weed.mp4" type="video/mp4"/>
+        Your browser does not support the video tag.
+      </video>
+      <div class="video2-play-overlay" id="video2-playOverlay">
+        <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="48" stroke="white" stroke-width="4" fill="rgba(0,0,0,0.5)"/>
+          <polygon points="40,30 70,50 40,70" fill="white"/>
+        </svg>
+      </div>
+      <div class="video2-progress">
+        <div class="video2-progress-fill" id="video2-progressFill"></div>
+      </div>
+    </div>
+
+    <div class="video2-controls">
+      <button id="video2-backwardBtn">⏪ -5s</button>
+      <button id="video2-speedBtn">1x</button>
+      <button id="video2-forwardBtn">+5s ⏩</button>
+      <button id="video2-fullscreenBtn">⛶</button>
+    </div>
+  </section>
+
+  <section class="project2-box" data-aos="fade-up">
+    <p><strong>University Project</strong> | <strong>Role:</strong> Hardware Designer<br>
+      <strong>Technologies:</strong> Raspberry Pi Pico W, MicroPython, L298N Motor Driver, HC-SR04 Ultrasonic Sensor, Dual Servos, LED "Weed Zapper"</p>
+  </section>
+
+  <section class="project2-box" data-aos="fade-up">
+    <p>The <em>Agricultural Weed Detection Robot</em> is a smart prototype designed to simulate autonomous weeding in a crop field. 
+    Equipped with a camera and server-based AI analysis, the robot moves in small steps, scanning for plants. If a weed is detected, 
+    it activates a playful "zapper" mechanism using servos and an LED to mimic targeted elimination. The system also integrates an 
+    ultrasonic sensor for obstacle avoidance, allowing for smooth autonomous navigation.</p>
+  </section>
+
+  <section class="project2-box" data-aos="fade-up">
+    <h2>My Contributions</h2>
+    <ul>
+      <li><strong>Hardware Architecture:</strong> Designed and wired the full circuit, including 4-motor drive system, ultrasonic sensor, dual servos, and LED zapper.</li>
+      <li><strong>Motor & Power Control:</strong> Integrated L298N motor driver with Raspberry Pi Pico W, ensuring stable control from a 7.4V battery source.</li>
+      <li><strong>Sensor Integration:</strong> Connected and calibrated the HC-SR04 ultrasonic sensor for real-time obstacle detection and avoidance logic.</li>
+      <li><strong>Servo Mechanism:</strong> Configured servo motors for horizontal sweep and vertical tilt to accurately "zap" weeds when detected.</li>
+      <li><strong>Collaboration:</strong> Partnered with a teammate who implemented server communication and AI analysis logic; ensured seamless hardware/software integration.</li>
+    </ul>
+  </section>
+
+  <section class="project2-box" data-aos="fade-up">
+    <h2>Skills Applied</h2>
+    <ul>
+      <li>Embedded systems prototyping with Raspberry Pi Pico W</li>
+      <li>Motor control and power distribution for 4-wheel drive</li>
+      <li>Ultrasonic obstacle detection and avoidance</li>
+      <li>Servo control for interactive mechanisms</li>
+      <li>Hardware circuit design and testing</li>
+      <li>MicroPython programming for real-time robotics</li>
+      <li>Team-based system integration (hardware + AI)</li>
+    </ul>
+  </section>
+
+  <footer style="text-align:center; padding:2rem; color:#888;">&copy; 2025 Mara Iubitu</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once:true, offset:100 });
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if(window.scrollY>50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    });
+
+    const particlesContainer=document.getElementById('particles');
+    for(let i=0;i<15;i++){
+      const particle=document.createElement('div');
+      particle.className='particle';
+      particle.style.width=Math.random()*100+50+'px';
+      particle.style.height=particle.style.width;
+      particle.style.left=Math.random()*100+'%';
+      particle.style.top=Math.random()*100+'%';
+      particle.style.animationDelay=Math.random()*10+'s';
+      particle.style.animationDuration=Math.random()*20+15+'s';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Video player
+    const video2=document.getElementById("video2-previewVideo");
+    const overlay2=document.getElementById("video2-playOverlay");
+    const wrapper2=document.querySelector(".video2-wrapper");
+    const progressFill2=document.getElementById("video2-progressFill");
+    const speedBtn2=document.getElementById("video2-speedBtn");
+    const forwardBtn2=document.getElementById("video2-forwardBtn");
+    const backwardBtn2=document.getElementById("video2-backwardBtn");
+    const fullscreenBtn2=document.getElementById("video2-fullscreenBtn");
+
+    wrapper2.addEventListener("click", ()=>{
+      if(video2.paused){ video2.play(); wrapper2.classList.remove("paused"); }
+      else{ video2.pause(); wrapper2.classList.add("paused"); }
+    });
+
+    video2.addEventListener("timeupdate", ()=>{
+      const percent=(video2.currentTime/video2.duration)*100;
+      progressFill2.style.width=percent+"%";
+    });
+
+    const speeds2=[1,1.5,2]; let speedIndex2=0;
+    speedBtn2.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      speedIndex2=(speedIndex2+1)%speeds2.length;
+      video2.playbackRate=speeds2[speedIndex2];
+      speedBtn2.textContent=speeds2[speedIndex2]+"x";
+    });
+
+    forwardBtn2.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      video2.currentTime=Math.min(video2.duration,video2.currentTime+5);
+    });
+
+    backwardBtn2.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      video2.currentTime=Math.max(0,video2.currentTime-5);
+    });
+
+    fullscreenBtn2.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      if(video2.webkitEnterFullscreen) video2.webkitEnterFullscreen(); // iOS Safari
+      else if(video2.msRequestFullscreen) video2.msRequestFullscreen();
+      else if(video2.requestFullscreen) video2.requestFullscreen();
+    });
+
+    if(video2.paused) wrapper2.classList.add("paused");
+  </script>
+</body>
+</html>

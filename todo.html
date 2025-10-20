@@ -3,209 +3,191 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Project One | My Portfolio</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>To-Do List Web App | Mara Iubitu Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <!-- Optional AOS (if used) -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Background particles */
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none; opacity: 0.15; }
+    .particle { position: absolute; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%; animation: float 20s infinite ease-in-out; }
+    @keyframes float {
+      0%,100%{transform:translateY(0) translateX(0) scale(1);}
+      33%{transform:translateY(-100px) translateX(100px) scale(1.2);}
+      66%{transform:translateY(-50px) translateX(-80px) scale(0.8);}
+    }
+
+    /* Navbar */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.1); transition: all .3s ease; }
+    .navbar.scrolled { background: rgba(10,10,10,0.95); box-shadow: 0 10px 30px rgba(0,0,0,0.3);}
+    .nav-content { max-width:1400px; margin:0 auto; padding:1.2rem 3rem;
+      display:flex; justify-content:space-between; align-items:center; }
+    .nav-logo { font-size:1.5rem; font-weight:700;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .nav-links { display:flex; gap:2.5rem; }
+    .nav-links a { text-decoration:none; color:rgba(255,255,255,0.8);
+      font-weight:500; font-size:.95rem; position:relative; transition:.3s; }
+    .nav-links a::after { content:''; position:absolute; bottom:-5px; left:0;
+      width:0; height:2px; background:linear-gradient(135deg,#667eea,#764ba2); transition:.3s; }
+    .nav-links a:hover { color:#fff; }
+    .nav-links a:hover::after { width:100%; }
+
+    /* Header */
+    header { text-align:center; padding:10rem 2rem 4rem; margin-top:60px; }
+    header h1 { font-size:clamp(2.5rem,6vw,4rem); font-weight:800; margin-bottom:1rem;
+      background:linear-gradient(135deg,#fff 0%,#667eea 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    header p { font-size:clamp(1.1rem,2vw,1.3rem); color:rgba(255,255,255,0.7); margin-bottom:1rem;}
+    header a { color:rgba(255,255,255,0.8); text-decoration:none; transition:.3s; }
+    header a:hover { color:#fff; }
+
+    /* Video wrapper */
+    .video1-wrapper { position:relative; max-width:700px; margin:2rem auto;
+      border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.3); background:#111; }
+    .video1-wrapper video { width:100%; display:block; border-radius:20px; object-fit:cover; cursor:pointer; background:black; }
+    .video1-play-overlay { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      z-index:2; display:none; cursor:pointer; }
+    .video1-wrapper.paused .video1-play-overlay { display:block; }
+    .video1-play-overlay svg:hover polygon { fill:#ff8ba7; }
+    .video1-progress { position:absolute; bottom:0; left:0; width:100%; height:6px; background:rgba(255,255,255,0.2);}
+    .video1-progress-fill { height:100%; background:linear-gradient(to right,#ff758c,#ff7eb3); width:0%; transition:width .1s ease; }
+    .video1-controls { max-width:700px; margin:1rem auto 3rem; display:flex; justify-content:center; gap:.7rem;}
+    .video1-controls button { background:#222; color:#fff; border:none; padding:.5rem 1rem;
+      border-radius:12px; font-size:1rem; cursor:pointer; transition:.2s; min-width:60px; }
+    .video1-controls button:hover { background:#ff7eb3; }
+
+    /* Project boxes */
+    .project1-box { max-width:900px; margin:2rem auto; padding:2rem;
+      background:rgba(255,255,255,0.03); border-radius:20px;
+      border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(10px);
+      color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.3);}
+    .project1-headline { font-size:2rem; font-weight:700;
+      background:linear-gradient(135deg,#fff 0%,#667eea 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:1rem;}
+    .project1-box h2 { font-size:1.5rem; margin-bottom:.8rem;}
+    .project1-box p, .project1-box ul { font-size:1rem; line-height:1.6; color:rgba(255,255,255,0.8); margin-bottom:1rem;}
+    .project1-box ul li { margin-bottom:.5rem; padding-left:.5rem;}
+    pre { background:#111; padding:1rem; border-radius:10px; overflow-x:auto; font-size:.9rem; color:#ffb6c1; }
+
+    @media(max-width:768px){
+      .video1-wrapper,.video1-controls{ max-width:90%;}
+      header h1{font-size:2.2rem;} .project1-headline{font-size:1.6rem;}
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar">
-  <div class="nav-content">
-    <a class="nav-logo">Mara Iubitu</a>
-    <div class="nav-links">
-      <a href="index.html">Projects</a>
-      <a href="certifications.html">Certifications</a>
-    </div>
-  </div>
-  </nav>
+  <div class="bg-animation" id="particles"></div>
 
+  <nav class="navbar" id="navbar">
+    <div class="nav-content">
+      <div class="nav-logo">Mara Iubitu</div>
+      <div class="nav-links">
+        <a href="index.html">Projects</a>
+        <a href="certifications.html">Certifications</a>
+      </div>
+    </div>
+  </nav>
 
   <header>
     <h1>To-Do List Web App</h1>
     <p>Elegant Productivity in Your Browser</p>
-    <a href="index.html" style="color:white;">← Back to Portfolio</a>
+    <a href="index.html">← Back to Portfolio</a>
   </header>
 
-
-  <section class="project-detail">
-   <div class="video-wrapper paused">
-      <video id="previewVideo" muted loop playsinline>
-        <source src="todolist.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
+  <section class="project-detail" data-aos="fade-up">
+    <div class="video1-wrapper paused">
+      <video id="video1-previewVideo" muted loop playsinline>
+        <source src="todolist.mp4" type="video/mp4"/>
       </video>
-
-      <!-- SVG Play Overlay -->
-      <div class="play-overlay" id="playOverlay">
-        <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="48" stroke="white" stroke-width="4" fill="rgba(0, 0, 0, 0.5)" />
-          <polygon points="40,30 70,50 40,70" fill="white" />
+      <div class="video1-play-overlay" id="video1-playOverlay">
+        <svg width="80" height="80" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="48" stroke="white" stroke-width="4" fill="rgba(0,0,0,0.5)"/>
+          <polygon points="40,30 70,50 40,70" fill="white"/>
         </svg>
       </div>
-
-      <!-- Progress Bar -->
-      <div class="video-progress">
-        <div class="video-progress-fill" id="progressFill"></div>
-      </div>
-
-      <!-- ✨ Custom Controls -->
-      <div class="video-controls">
-        <button id="backwardBtn">⏪ -5s</button>
-        <button id="speedBtn">1x</button>
-        <button id="forwardBtn">+5s ⏩</button>
-      </div>
+      <div class="video1-progress"><div class="video1-progress-fill" id="video1-progressFill"></div></div>
+    </div>
+    <div class="video1-controls">
+      <button id="video1-backwardBtn">⏪ -5s</button>
+      <button id="video1-speedBtn">1x</button>
+      <button id="video1-forwardBtn">+5s ⏩</button>
+      <button id="video1-fullscreenBtn">⛶</button>
     </div>
   </section>
 
-  <section class="project-description">
-  <h2>To-Do List Web App</h2>
-  <p>A stylish and responsive task manager built entirely with vanilla JavaScript, HTML5, and CSS3. Designed for both functionality and delight, the app enables users to manage daily tasks efficiently while enjoying playful features like confetti celebrations and theme toggles.</p>
+  <section class="project1-box" data-aos="fade-up">
+    <h1 class="project1-headline">Stylish To-Do List Manager</h1>
+    <p><strong>Personal Project</strong> | <strong>Role:</strong> Full-Stack Developer<br>
+    <strong>Technologies:</strong> HTML5, CSS3, Vanilla JS, LocalStorage, canvas-confetti</p>
+  </section>
 
-  <h3>Key Features</h3>
+  <section class="project1-box" data-aos="fade-up">
+    <p>This responsive web app lets users manage tasks with flair — persistence, drag-and-drop reordering, due dates, theme toggle, and even celebratory confetti. Designed to feel both functional and fun.</p>
+  </section>
 
-  <ul>
-    <li><strong>Task Management with Persistence</strong><br>
-      Add, edit, complete, and delete tasks with data stored in <code>localStorage</code> for full session persistence.
-      <pre><code>let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  <section class="project1-box" data-aos="fade-up">
+    <h2>Key Features</h2>
+    <ul>
+      <li><strong>Task Management:</strong> Add, edit, complete, and delete tasks with persistence in <code>localStorage</code>.</li>
+      <li><strong>Due Dates:</strong> Optional deadlines displayed beside each entry.</li>
+      <li><strong>Confetti Celebration:</strong> A burst of colors when marking tasks completed.</li>
+      <li><strong>Theme Toggle:</strong> Switch between light/dark pastel modes.</li>
+      <li><strong>Drag-and-Drop:</strong> Intuitive reordering of tasks without libraries.</li>
+    </ul>
+  </section>
 
-function saveTasks() {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}</code></pre>
-    </li>
+  <section class="project1-box" data-aos="fade-up">
+    <h2>Skills Applied</h2>
+    <ul>
+      <li>Responsive frontend development</li>
+      <li>JavaScript DOM manipulation</li>
+      <li>Data persistence with localStorage</li>
+      <li>UI/UX polish with animations</li>
+      <li>Lightweight interactive features</li>
+    </ul>
+  </section>
 
-    <li><strong>Due Dates</strong><br>
-      Optional due dates can be assigned to each task and are shown subtly beside the task entry.
-      <pre><code>const dueDate = document.createElement('span');
-dueDate.className = 'task-date';
-dueDate.textContent = task.dueDate ? `Due: ${task.dueDate}` : '';</code></pre>
-    </li>
+  <footer style="text-align:center; padding:2rem; color:#888;">© 2025 Mara Iubitu</footer>
 
-    <li><strong>Confetti Celebration</strong><br>
-      A cheerful burst of confetti using <code>canvas-confetti</code> is triggered when a task is marked as completed.
-      <pre><code>function triggerConfetti() {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors: ['#ff69b4', '#ffb6c1', '#dda0dd']
-  });
-}</code></pre>
-    </li>
-
-    <li><strong>Light/Dark Theme Toggle</strong><br>
-      Easily switch between light and dark modes using a data attribute and CSS custom properties.
-      <pre><code>toggleThemeBtn.addEventListener('click', () =&gt; {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', newTheme);
-});</code></pre>
-      <pre><code>[data-theme="dark"] {
-  background: linear-gradient(to bottom right, #330026, #500033);
-  color: var(--text-dark);
-}</code></pre>
-    </li>
-
-    <li><strong>Drag-and-Drop Reordering</strong><br>
-      Tasks can be reordered intuitively with drag-and-drop — all implemented without libraries.
-      <pre><code>let dragStartIndex;
-
-function dragStart() {
-  dragStartIndex = +this.closest('li').dataset.index;
-}
-
-function drop() {
-  const dragEndIndex = +this.closest('li').dataset.index;
-  const draggedItem = tasks[dragStartIndex];
-  tasks.splice(dragStartIndex, 1);
-  tasks.splice(dragEndIndex, 0, draggedItem);
-  saveTasks();
-  renderTasks();
-}</code></pre>
-    </li>
-  </ul>
-
-  <h3>Tech Stack</h3>
-  <ul class="tech-list">
-    <li><strong>HTML5</strong>: Semantic markup for accessibility and clarity</li>
-    <li><strong>CSS3</strong>: Glassmorphism effects, responsive layout, pastel theme</li>
-    <li><strong>Vanilla JavaScript</strong>: Core app logic without any frameworks</li>
-    <li><strong>canvas-confetti</strong>: A lightweight animation library for celebrations</li>
-  </ul>
-</section>
-
-  <footer style="text-align:center; padding: 2rem; color:#888;">
-    &copy; 2025 Mara Iubitu
-  </footer>
-
-  <!-- Optional: AOS animations -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>AOS.init();</script>
-
-  <!-- 💻 Script for scroll, play, and progress bar -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <script>
-    const video = document.getElementById("previewVideo");
-    const overlay = document.getElementById("playOverlay");
-    const wrapper = document.querySelector(".video-wrapper");
-    const progressFill = document.getElementById("progressFill");
-
-    // New controls
-    const speedBtn = document.getElementById("speedBtn");
-    const forwardBtn = document.getElementById("forwardBtn");
-    const backwardBtn = document.getElementById("backwardBtn");
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting && !video.paused) {
-            video.pause();
-            wrapper.classList.add("paused");
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(video);
-
-    wrapper.addEventListener("click", () => {
-      if (video.paused) {
-        video.play();
-        wrapper.classList.remove("paused");
-      } else {
-        video.pause();
-        wrapper.classList.add("paused");
-      }
-    });
-
-    video.addEventListener("timeupdate", () => {
-      const percent = (video.currentTime / video.duration) * 100;
-      progressFill.style.width = percent + "%";
-    });
-
-    // Speed toggle (1x → 1.5x → 2x → 1x)
-    const speeds = [1, 1.5, 2];
-    let speedIndex = 0;
-    speedBtn.addEventListener("click", () => {
-      speedIndex = (speedIndex + 1) % speeds.length;
-      video.playbackRate = speeds[speedIndex];
-      speedBtn.textContent = speeds[speedIndex] + "x";
-    });
-
-    // Skip forward/backward
-    forwardBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      video.currentTime = Math.min(video.duration, video.currentTime + 5);
-    });
-
-    backwardBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      video.currentTime = Math.max(0, video.currentTime - 5);
-    });
-
-    // Set initial state
-    if (video.paused) {
-      wrapper.classList.add("paused");
-    }
+    AOS.init({ once:true, offset:100 });
+    const navbar=document.getElementById('navbar');
+    window.addEventListener('scroll',()=>{ if(window.scrollY>50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled'); });
+    const particles=document.getElementById('particles');
+    for(let i=0;i<15;i++){const p=document.createElement('div');p.className='particle';
+      p.style.width=Math.random()*100+50+'px';p.style.height=p.style.width;
+      p.style.left=Math.random()*100+'%';p.style.top=Math.random()*100+'%';
+      p.style.animationDelay=Math.random()*10+'s';p.style.animationDuration=Math.random()*20+15+'s';particles.appendChild(p);}
+    // Video
+    const v=document.getElementById("video1-previewVideo"),
+          overlay=document.getElementById("video1-playOverlay"),
+          wrap=document.querySelector(".video1-wrapper"),
+          fill=document.getElementById("video1-progressFill"),
+          speedBtn=document.getElementById("video1-speedBtn"),
+          fwd=document.getElementById("video1-forwardBtn"),
+          back=document.getElementById("video1-backwardBtn"),
+          fs=document.getElementById("video1-fullscreenBtn");
+    wrap.addEventListener("click",()=>{if(v.paused){v.play();wrap.classList.remove("paused");}else{v.pause();wrap.classList.add("paused");}});
+    v.addEventListener("timeupdate",()=>{fill.style.width=(v.currentTime/v.duration*100)+"%";});
+    const speeds=[1,1.5,2]; let idx=0;
+    speedBtn.addEventListener("click",e=>{e.stopPropagation(); idx=(idx+1)%speeds.length; v.playbackRate=speeds[idx]; speedBtn.textContent=speeds[idx]+"x";});
+    fwd.addEventListener("click",e=>{e.stopPropagation(); v.currentTime=Math.min(v.duration,v.currentTime+5);});
+    back.addEventListener("click",e=>{e.stopPropagation(); v.currentTime=Math.max(0,v.currentTime-5);});
+    fs.addEventListener("click",e=>{e.stopPropagation(); if(v.requestFullscreen)v.requestFullscreen(); else if(v.webkitRequestFullscreen)v.webkitRequestFullscreen(); else if(v.msRequestFullscreen)v.msRequestFullscreen();});
+    if(v.paused) wrap.classList.add("paused");
   </script>
-
 </body>
 </html>
